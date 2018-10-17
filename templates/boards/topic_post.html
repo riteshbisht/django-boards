@@ -1,0 +1,78 @@
+{% extends 'boards/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+
+{{ topic.subject }}
+{% endblock title %}
+{% block breadcrumb %}
+    <a href="{% url 'boards:home' %}">Boards</a> /<a href="{% url 'boards:topics' topic.board.id %}">{{ topic.board.Name }}</a> /{{ topic.subject }}
+{% endblock breadcrumb %}
+
+
+
+{% block content %}
+<div class="mb-4">
+<a href="{% url 'boards:topic_posts_reply' topic.board.id topic.pk %}" class="btn btn-primary" role="button">Reply</a>
+</div>
+
+    {% for post in posts %}
+        <div class = "card">
+
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-2">
+                    <img class="w-100" width="100" height="100" src = "https://openclipart.org/image/300px/svg_to_png/215826/Happy-Penguin-Avatar.png">
+                    <small>Posts: {{ post.created_by.posts.count }}</small>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <strong class="text-muted">{{ post.created_by.username }}</strong>
+
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <small class="">{{ post.created_at|naturaltime }}</small>
+                            </div>
+
+
+
+                        </div>
+
+                        {{ post.get_message_as_markdown }}
+                        {% if post.created_by == user %}
+
+                        <div class="mt-3">
+                         <a href="{% url 'boards:edit_post' post.topic.board.pk post.topic.pk post.pk  %}" class="btn btn-primary btn-sm" role="button">Edit</a>
+                        </div>
+
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+    {% endfor %}
+
+
+{% include 'boards/includes/pagination.html' %}
+
+{% endblock content %}
+
